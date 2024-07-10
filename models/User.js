@@ -11,7 +11,7 @@ const userSchema = new Schema({
     followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
     following: [{ type: Schema.Types.ObjectId, ref: "User" }],
     posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
-    followRequests: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    followRequests: [{ type: Schema.Types.ObjectId, ref: "FollowRequest" }],
     repostedPosts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
 });
 
