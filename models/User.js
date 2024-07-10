@@ -16,22 +16,18 @@ const userSchema = new Schema({
 });
 
 // hash the password before saving it
-userSchema.pre('save', async function (next) {
-    const user = this;
-
-    if (!user.isModified('password')) return next(); // only hash the pw if it has been modified or new
-
-    bcryptjs.genSalt(10, function (err, salt) {
-
-        if (err) return next(err);
-
-        bcryptjs.hash(user.password, salt, function (err, hash) {
-            if (err) return next(err);
-
-            user.password = hash;
+userSchema.pre('save', async function(next) {
+    if (this.isModified('password')) {
+        try {
+            const salt = await bcryptjs.genSalt(10);
+            this.password =  await bcryptjs.hash(this.password, salt);
             next();
-        })
-    })
-})
+        } catch (err) {
+            next(err);
+        }
+    } else {
+        return next();
+    }
+});
 
 module.exports = mongoose.model('User', userSchema)
