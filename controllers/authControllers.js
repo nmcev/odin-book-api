@@ -9,7 +9,7 @@ exports.login_post = [
             return res.status(400).json({ errors: [{ message: 'Login failed' }] });
         }
 
-        res.json({ message: "logged in successfully!" })
+        res.json({ message: "logged in successfully!", user: req.user })
     }
 ]
 
