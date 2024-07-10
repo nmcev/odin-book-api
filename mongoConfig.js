@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const MongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017';
+const MongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/odin-book';
 
 // dotenv
 require('dotenv').config();
