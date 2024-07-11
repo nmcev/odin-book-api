@@ -10,6 +10,7 @@ const passport = require('passport')
 var indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const postsRouter = require('./routes/posts');
+const commentsRouter = require('./routes/comments');
 
 
 var app = express();
@@ -43,7 +44,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api', authRouter);
 app.use('/api', postsRouter);
-
+app.use('/api', commentsRouter);
 //connect to mongodb
 connectToMongoDB().catch(err => console.error(err));
 
