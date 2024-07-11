@@ -6,7 +6,6 @@ var logger = require('morgan');
 const connectToMongoDB = require('./mongoConfig')
 const session = require('express-session');
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 const passport = require('passport')
 
