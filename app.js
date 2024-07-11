@@ -5,10 +5,11 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const connectToMongoDB = require('./mongoConfig')
 const session = require('express-session');
+const passport = require('passport')
+// routes
 var indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
-const passport = require('passport')
-
+const postsRouter = require('./routes/posts');
 
 
 var app = express();
@@ -40,7 +41,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/', authRouter);
+app.use('/api', authRouter);
+app.use('/api', postsRouter);
 
 //connect to mongodb
 connectToMongoDB().catch(err => console.error(err));
