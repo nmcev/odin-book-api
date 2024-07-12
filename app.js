@@ -12,7 +12,7 @@ const authRouter = require('./routes/auth');
 const postsRouter = require('./routes/posts');
 const commentsRouter = require('./routes/comments');
 const usersRouter = require('./routes/users');
-
+const followRouter = require('./routes/follow')
 var app = express();
 
 // view engine setup
@@ -46,6 +46,7 @@ app.use('/api', authRouter);
 app.use('/api', postsRouter);
 app.use('/api', commentsRouter);
 app.use('/api', usersRouter);
+app.use('/api', followRouter)
 //connect to mongodb
 connectToMongoDB().catch(err => console.error(err));
 
