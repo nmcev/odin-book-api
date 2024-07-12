@@ -11,7 +11,7 @@ var indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const postsRouter = require('./routes/posts');
 const commentsRouter = require('./routes/comments');
-
+const usersRouter = require('./routes/users');
 
 var app = express();
 
@@ -45,6 +45,7 @@ app.use('/', indexRouter);
 app.use('/api', authRouter);
 app.use('/api', postsRouter);
 app.use('/api', commentsRouter);
+app.use('/api', usersRouter);
 //connect to mongodb
 connectToMongoDB().catch(err => console.error(err));
 
