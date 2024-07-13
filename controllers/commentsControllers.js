@@ -15,7 +15,7 @@ exports.createComment_post = async (req, res, next) => {
 
 
         await Post.findByIdAndUpdate(postId, { $push: { comments: newComment } });
-        res.json({ commented: true })
+        res.status(201).json({ commented: true, comment: newComment })
     } catch (err) {
         next(err)
     }
