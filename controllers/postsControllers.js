@@ -127,7 +127,7 @@ exports.unlikePost_post = async (req, res, next) => {
 
         await Post.findByIdAndUpdate(postId, { $inc: { likes: -1 } });
 
-        res.json({ msg: 'like removed ' })
+        res.json({ unlike: true })
     } catch (e) {
         next(e)
     }
