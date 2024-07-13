@@ -8,6 +8,7 @@ module.exports = function (passport) {
 
         try {
 
+            username = username.toLowerCase();
             const user = await User.findOne({ username });
 
             if (!user) return done(null, false, { message: "Incorrect username." });

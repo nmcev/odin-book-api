@@ -45,6 +45,6 @@ describe('Follow Routes', () => {
 
     afterAll(async () => {
         await agent.post('/api/logout');
-        await User.findOneAndDelete({ username: user.username });
+        await User.findOneAndDelete({ username: user.username.toLowerCase() });
     });
 });

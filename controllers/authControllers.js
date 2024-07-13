@@ -33,7 +33,8 @@ exports.register_post = [
         }
 
 
-        const { username, password, profilePic } = req.body;
+        let { username, password, profilePic } = req.body;
+        username = username.toLowerCase();
         try {
             const existUser = await User.findOne({ username });
 
