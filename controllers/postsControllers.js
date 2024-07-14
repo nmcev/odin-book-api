@@ -133,3 +133,38 @@ exports.unlikePost_post = async (req, res, next) => {
     }
 };
 
+exports.updatePost_patch = [
+    body('content').optional().isLength({ min: 1 }).withMessage('Content must not be empty'),
+    body('media').optional(),
+    async (req, res, next) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
+
+        const { content, media } = req.body;
+        const postId = req.params.id;
+
+        try {
+            const post = await Post.findById(postId);
+
+            if (!post) {
+                return res.status(404).json({ message: 'Post not found' });
+            }
+
+            if (content !== undefined) {
+                post.content = content;
+            }
+            if (media !== undefined) {
+                post.media = media;
+            }
+
+            await post.save();
+            res.status(200).json({ message: 'Post updated successfully', post });
+
+        } catch (e) {
+            next(e);
+        }
+    }
+
+]
