@@ -1,8 +1,6 @@
 const app = require('../app');
 const request = require('supertest');
-const Post = require('../models/Post');
 const User = require('../models/User');
-const { body } = require('express-validator');
 
 const user = {
     username: 'watermelon',
