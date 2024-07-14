@@ -25,10 +25,10 @@ router.get('/posts/user', isAuthenticated, userPosts_get);
 router.delete('/posts/:id', isAuthenticated, post_delete);
 
 // LIKE a post
-router.post('/posts/like/:id', likePost_post);
+router.post('/posts/like/:id', isAuthenticated, likePost_post);
 
 // remove a LIKE
-router.post('/posts/unlike/:id', unlikePost_post);
+router.post('/posts/unlike/:id', isAuthenticated, unlikePost_post);
 
 // UPDATE(patch) a post
 router.patch('/posts/:id', isAuthenticated, updatePost_patch)
