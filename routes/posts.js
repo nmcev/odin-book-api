@@ -29,7 +29,8 @@ router.post('/posts/like/:id', likePost_post);
 // remove a LIKE
 router.post('/posts/unlike/:id', unlikePost_post);
 
-// TODO: UPDATE post
+// UPDATE(patch) a post
+router.patch('/posts/:id', isAuthenticated, updatePost_patch)
 
 module.exports = router;
 
