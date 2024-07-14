@@ -7,6 +7,7 @@ const {
     post_delete,
     likePost_post,
     unlikePost_post,
+    updatePost_patch
 } = require('../controllers/postsControllers');
 
 const { isAuthenticated } = require('../auth/isAuth')
