@@ -40,6 +40,22 @@ describe('Posts routes', () => {
     })
 
 
+    describe('Patch update a post', () => {
+
+        it('should update the content of a post', async () => {
+
+            await agent.patch(`/api/posts/${postId}`).send({
+                content: 'new edited post'
+            })
+                .expect(200)
+                .expect(res => {
+                    expect(res.body.post).toHaveProperty('_id')
+
+                })
+            
+        })
+    })
+
     describe('GET all posts for not logged in users', () => {
 
         it('should return all posts for not logged in users', async () => {
