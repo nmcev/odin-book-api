@@ -9,7 +9,7 @@ const user = {
 
 describe('Follow Routes', () => {
     let agent = request.agent(app);
-
+    let targetUserId
     beforeAll(async () => {
         const res = await request(app).post('/api/register').send(user);
         expect(res.status).toBe(200);
