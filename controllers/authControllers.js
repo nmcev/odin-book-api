@@ -33,7 +33,7 @@ exports.register_post = [
         }
 
 
-        let { username, password, profilePic } = req.body;
+        let { username, password, profilePic, bio } = req.body;
         username = username.toLowerCase();
         try {
             const existUser = await User.findOne({ username });
@@ -46,6 +46,7 @@ exports.register_post = [
                 username,
                 password,
                 profilePic,
+                bio
             })
 
             await newUser.save();
