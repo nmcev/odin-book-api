@@ -14,6 +14,15 @@ const userSchema = new Schema({
     repostedPosts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
 });
 
+
+userSchema.pre('save', async function(next) {
+    if (this.isModified('username')) {
+        this.username = this.username.toLowerCase();
+    }
+    next();
+});
+
+
 // hash the password before saving it
 userSchema.pre('save', async function(next) {
     if (this.isModified('password')) {
