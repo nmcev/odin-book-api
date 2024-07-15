@@ -8,6 +8,7 @@ const user = {
     username: 'demo',
     password: '123456',
     profilePic: 'https://i.pinimg.com/236x/41/7f/35/417f35f8df9ad27617954e00ab7b989f.jpg',
+    bio: 'test'
 }
 
 
