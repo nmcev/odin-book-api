@@ -54,7 +54,10 @@ exports.allPosts_get = async (req, res, next) => {
         const limit = parseInt(req.query.limit || 10);
         const documentsToSkip = (page - 1) * limit
 
-        const allPosts = await Post.find().sort({ createdAt: -1 }).skip(documentsToSkip).limit(limit);
+        const allPosts = await Post.find().sort({ createdAt: -1 }).skip(documentsToSkip).limit(limit).populate({
+            path: 'author',
+            select: '-password'
+        })
 
         res.json({ posts: allPosts });
     } catch (e) {
