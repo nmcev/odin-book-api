@@ -50,7 +50,11 @@ exports.allPosts_get = async (req, res, next) => {
     // allPosts_get: retrieve all posts for users who are currently not logged in.
 
     try {
-        const allPosts = await Post.find();
+        const page = parseInt(req.query.page || 1);
+        const limit = parseInt(req.query.limit || 10);
+        const documentsToSkip = (page - 1) * limit
+
+        const allPosts = await Post.find().sort({ createdAt: -1 }).skip(documentsToSkip).limit(limit);
 
         res.json({ posts: allPosts });
     } catch (e) {
