@@ -31,6 +31,11 @@ app.use(session({
   resave: false
 
 }))
+const cors = require('cors')
+
+app.use(cors({
+  origin: ['http://localhost:5173']
+}))
 
 app.use(passport.initialize());
 app.use(passport.session());
