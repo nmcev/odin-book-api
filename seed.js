@@ -5,6 +5,14 @@ const Comment = require('./models/Comment');
 const { faker } = require('@faker-js/faker');
 require('dotenv').config();
 
+const categories = [ 'city', 'people', 'sports', 'food', 'nightlife', 'business', 'technics', 'transport'];
+
+const getRandomCategory = () => {
+    const randomIndex = Math.floor(Math.random() * categories.length);
+    return categories[randomIndex];
+  };
+  
+
 async function connectMongo() {
     try {
         await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/odin-book');
@@ -60,7 +68,7 @@ async function createPosts(users) {
                 author: users[randomUserIndex]._id,
                 content: faker.lorem.lines(),
                 likes: faker.number.int({ min: 0, max: 10 }),
-                media: faker.image.urlLoremFlickr(),
+                media: faker.image.urlLoremFlickr({category: getRandomCategory()}),
                 createdAt: faker.date.recent(),
                 comments: [],
 
