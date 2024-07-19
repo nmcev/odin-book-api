@@ -6,7 +6,7 @@ const passport = require('passport');
 
 
 // login route
-router.post('/login', passport.authenticate('local'), authControllers.login_post);
+router.post('/login', authControllers.login_post)
 
 
 // register router

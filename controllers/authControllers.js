@@ -1,15 +1,24 @@
 const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
-
+const passport = require('passport')
 
 exports.login_post = [
     (req, res, next) => {
+        passport.authenticate('local', (err, user, info) => {
+            if (err) {
+                return res.status(500).json({ message: 'Server error', error: err.message });
+            }
+            if (!user) {
+                return res.status(401).json({ message: info.message || 'Login failed' });
+            }
+            req.logIn(user, (err) => {
+                if (err) {
+                    return res.status(500).json({ message: 'Server error', error: err.message });
+                }
+                return res.json({ message: 'Logged in successfully!', user });
+            });
+        })(req, res, next);
 
-        if (!req.isAuthenticated()) {
-            return res.status(400).json({ errors: [{ message: 'Login failed' }] });
-        }
-
-        res.json({ message: "logged in successfully!", user: req.user })
     }
 ]
 
