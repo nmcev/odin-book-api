@@ -97,6 +97,7 @@ exports.userPosts_get = async (req, res, next) => {
 
         posts.sort((a, b) => a.createdAt - b.createdAt);
 
+        shuffle(posts)
         res.status(200).json({ posts })
     }
     catch (e) {
