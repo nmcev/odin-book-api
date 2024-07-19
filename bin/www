@@ -8,15 +8,12 @@ var app = require('../app');
 var debug = require('debug')('odin-book-api:server');
 var http = require('http');
 const socketIo = require('socket.io');
-const cors = require('cors');
 /**
  * Get port from environment and store in Express.
  */
 
 var port = normalizePort(process.env.PORT || '3000');
-app.use(cors({
-  origin: ['http://localhost:5173']
-}))
+
 app.set('port', port);
 
 /**
