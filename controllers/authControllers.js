@@ -4,18 +4,28 @@ const passport = require('passport')
 
 exports.login_post = [
     (req, res, next) => {
-        passport.authenticate('local', (err, user, info) => {
+        passport.authenticate('local', async (err, user, info) => {
             if (err) {
                 return res.status(500).json({ message: 'Server error', error: err.message });
             }
             if (!user) {
                 return res.status(401).json({ message: info.message || 'Login failed' });
             }
+
+            const populatedUser = await User.findById(user._id)
+                .populate('posts')
+                .populate('following')
+                .populate('followers')
+                .populate('repostedPosts')
+                .select('-password')
+
+                .exec();
+
             req.logIn(user, (err) => {
                 if (err) {
                     return res.status(500).json({ message: 'Server error', error: err.message });
                 }
-                return res.json({ message: 'Logged in successfully!', user });
+                return res.json({ message: 'Logged in successfully!', user: populatedUser });
             });
         })(req, res, next);
 
@@ -77,6 +87,17 @@ exports.logout_post = async (req, res) => {
 }
 
 
-exports.auth_get = (req, res) => {
-    res.json({ user: req.user });
+exports.auth_get = async (req, res) => {
+    const user = req.user
+    
+    const populatedUser = await User.findById(user._id)
+    .populate('posts')
+    .populate('following')
+    .populate('followers')
+        .populate('repostedPosts')
+        .select('-password')
+    .exec();
+
+
+    res.json({ user: populatedUser });
 }
