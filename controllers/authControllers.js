@@ -11,15 +11,20 @@ exports.login_post = [
             if (!user) {
                 return res.status(401).json({ message: info.message || 'Login failed' });
             }
-
+    
             const populatedUser = await User.findById(user._id)
-                .populate('posts')
-                .populate('following')
-                .populate('followers')
-                .populate('repostedPosts')
+            .populate({
+                path: 'posts',
+                populate: { path: 'author', select: 'username name profilePic' }
+            })    .populate('following')
+            .populate('followers')
+                .populate({
+                    path: 'repostedPosts',
+                    populate: { path: 'author', select: 'username name profilePic' }
+                })
                 .select('-password')
-
-                .exec();
+            .exec();
+        
 
             req.logIn(user, (err) => {
                 if (err) {
@@ -91,10 +96,15 @@ exports.auth_get = async (req, res) => {
     const user = req.user
     
     const populatedUser = await User.findById(user._id)
-    .populate('posts')
-    .populate('following')
+    .populate({
+        path: 'posts',
+        populate: { path: 'author', select: 'username name profilePic' }
+    })    .populate('following')
     .populate('followers')
-        .populate('repostedPosts')
+        .populate({
+            path: 'repostedPosts',
+            populate: { path: 'author', select: 'username name profilePic' }
+        })
         .select('-password')
     .exec();
 
