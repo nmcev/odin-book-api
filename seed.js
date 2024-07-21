@@ -5,7 +5,7 @@ const Comment = require('./models/Comment');
 const { faker } = require('@faker-js/faker');
 require('dotenv').config();
 
-const categories = [ 'city', 'people', 'sports', 'food', 'nightlife', 'business', 'technics', 'transport'];
+const categories = [ 'city', 'people', 'sports', 'food', 'nightlife', 'business', 'transport'];
 
 const getRandomCategory = () => {
     const randomIndex = Math.floor(Math.random() * categories.length);
@@ -65,7 +65,7 @@ async function createPosts(users) {
             let randomUserIndex = faker.number.int({ min: 0, max: users.length - 1 });
 
             let post = new Post({
-                author: users[randomUserIndex]._id,
+                author: users[i]._id,
                 content: faker.lorem.lines(),
                 likes: faker.number.int({ min: 0, max: 10 }),
                 media: faker.image.urlLoremFlickr({category: getRandomCategory()}),
