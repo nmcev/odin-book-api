@@ -7,6 +7,6 @@ router.get('/users', getAllUsers_get);
 
 
 // GET a user
-router.get('/users/:userId', getAUser_get);
+router.get('/users/:username', getAUser_get);
 
 module.exports = router;
