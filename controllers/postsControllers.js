@@ -73,6 +73,10 @@ exports.userPosts_get = async (req, res, next) => {
     try {
         const userId = req.user._id;
 
+        const page = parseInt(req.query.page || 1);
+        const limit = parseInt(req.query.limit || 10);
+        const documentsToSkip = (page - 1) * limit
+
         const user = await User.findById(userId)
         .populate({
             path: 'posts',
@@ -98,7 +102,11 @@ exports.userPosts_get = async (req, res, next) => {
         posts.sort((a, b) => a.createdAt - b.createdAt);
 
         shuffle(posts)
-        res.status(200).json({ posts })
+
+        const paginatedPosts = posts.slice(documentsToSkip, documentsToSkip + limit);
+
+        console.log(paginatedPosts.length)
+        res.status(200).json({ posts: paginatedPosts });
     }
     catch (e) {
         next(e);
