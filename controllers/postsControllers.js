@@ -193,6 +193,32 @@ exports.updatePost_patch = [
 
 ]
 
+exports.getPost_get = async (req, res, next) => {
+    const { id } = req.params;
+
+    try {
+        const post = await Post.findById(id)
+        .populate('author', 'username profilePic -password')
+        .populate({
+            path: 'comments',
+            populate: {
+                path: 'author',
+                select: 'username profilePic -password'
+            }
+        });
+
+
+        if (!post) {
+            return res.status(404).json('Post not found!')
+        }
+
+        res.json( post )
+    } catch (e) {
+        next(e)
+    }
+
+}
+
 function shuffle(array) {
     let currentIndex = array.length;
   
