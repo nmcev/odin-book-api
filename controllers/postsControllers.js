@@ -198,12 +198,12 @@ exports.getPost_get = async (req, res, next) => {
 
     try {
         const post = await Post.findById(id)
-        .populate('author', 'username profilePic -password')
+        .populate('author', 'username profilePic ')
         .populate({
             path: 'comments',
             populate: {
                 path: 'author',
-                select: 'username profilePic -password'
+                select: 'username profilePic'
             }
         });
 
