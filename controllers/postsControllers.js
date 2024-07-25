@@ -141,6 +141,9 @@ exports.likePost_post = async (req, res, next) => {
             return res.status(404).json({ error: 'Post not found' });
         }
 
+        if (post.likes.includes(req.user._id)) {
+            return res.status(400).json({ error: 'User has already liked this post' });
+        }
 
         await Post.findByIdAndUpdate(postId, { $push: { likes: req.user._id } });
 
