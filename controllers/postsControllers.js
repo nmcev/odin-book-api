@@ -155,6 +155,13 @@ exports.unlikePost_post = async (req, res, next) => {
     try {
         const postId = req.params.id;
 
+        const post = await Post.findById(postId);
+
+        if (!post) {
+            return res.status(404).json({ error: 'Post not found' });
+        }
+
+        
         await Post.findByIdAndUpdate(postId, { $pull: { likes: req.user._id} });
 
         res.json({ unlike: true })
