@@ -26,7 +26,7 @@ router.get('/posts/user', isAuthenticated, userPosts_get);
 router.get('/posts/user', isAuthenticated, userPosts_get);
 
 // GET A
-router.get('/posts/:id', isAuthenticated, getPost_get);
+router.get('/posts/:id', getPost_get);
 
 // DELETE a post 
 router.delete('/posts/:id', isAuthenticated, post_delete);
