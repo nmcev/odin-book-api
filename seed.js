@@ -62,13 +62,26 @@ async function createPosts(users) {
         let numOfPosts = faker.number.int({ min: 1, max: 5 });
 
         for (let j = 0; j < numOfPosts; j++) {
-            let randomUserIndex = faker.number.int({ min: 0, max: users.length - 1 });
+            const numOfLikes = faker.number.int({ min: 1, max: users.length})
+            const likes = [];
 
+
+            for (let k = 0; k < numOfLikes; k++) {
+                let randomUserIndex = faker.number.int({ min: 0, max: users.length - 1 }); 
+
+                const likedBy = users[randomUserIndex]._id
+                if (!likes.includes(likedBy)) {
+                    likes.push(users[randomUserIndex]._id)
+                } else {
+                    k--;
+                }
+
+            }
             let post = new Post({
                 author: users[i]._id,
                 content: faker.lorem.lines(),
-                likes: faker.number.int({ min: 0, max: 10 }),
-                media: faker.image.urlLoremFlickr({category: getRandomCategory()}),
+                likes: likes,
+                media: faker.image.urlLoremFlickr({ category: getRandomCategory() }),
                 createdAt: faker.date.recent(),
                 comments: [],
 
