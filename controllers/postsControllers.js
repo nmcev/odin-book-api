@@ -142,7 +142,7 @@ exports.likePost_post = async (req, res, next) => {
         }
 
 
-        await Post.findByIdAndUpdate(postId, { $inc: { likes: 1 } });
+        await Post.findByIdAndUpdate(postId, { $push: { likes: req.user._id } });
 
         res.json({ like: true });
     } catch (e) {
