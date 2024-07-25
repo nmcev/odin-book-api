@@ -59,7 +59,7 @@ exports.allPosts_get = async (req, res, next) => {
             select: '-password'
         })
 
-        shuffle(allPosts) 
+        shuffle(allPosts)
         res.json({ posts: allPosts });
     } catch (e) {
         next(e);
@@ -78,17 +78,17 @@ exports.userPosts_get = async (req, res, next) => {
         const documentsToSkip = (page - 1) * limit
 
         const user = await User.findById(userId)
-        .populate({
-            path: 'posts',
-            populate: { path: 'author', select: 'username profilePic' }
-        })
-        .populate({
-            path: 'following',
-            populate: {
+            .populate({
                 path: 'posts',
                 populate: { path: 'author', select: 'username profilePic' }
-            }
-        });
+            })
+            .populate({
+                path: 'following',
+                populate: {
+                    path: 'posts',
+                    populate: { path: 'author', select: 'username profilePic' }
+                }
+            });
         if (!user) {
             return res.status(404).json({ message: "User not found" })
         };
@@ -135,6 +135,12 @@ exports.likePost_post = async (req, res, next) => {
 
     try {
         const postId = req.params.id;
+        const post = await Post.findById(postId);
+
+        if (!post) {
+            return res.status(404).json({ error: 'Post not found' });
+        }
+
 
         await Post.findByIdAndUpdate(postId, { $inc: { likes: 1 } });
 
@@ -198,21 +204,21 @@ exports.getPost_get = async (req, res, next) => {
 
     try {
         const post = await Post.findById(id)
-        .populate('author', 'username profilePic ')
-        .populate({
-            path: 'comments',
-            populate: {
-                path: 'author',
-                select: 'username profilePic'
-            }
-        });
+            .populate('author', 'username profilePic ')
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author',
+                    select: 'username profilePic'
+                }
+            });
 
 
         if (!post) {
             return res.status(404).json('Post not found!')
         }
 
-        res.json( post )
+        res.json(post)
     } catch (e) {
         next(e)
     }
@@ -221,14 +227,13 @@ exports.getPost_get = async (req, res, next) => {
 
 function shuffle(array) {
     let currentIndex = array.length;
-  
+
     while (currentIndex != 0) {
-  
-      let randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-  
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex], array[currentIndex]];
+
+        let randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
     }
 }
-  
