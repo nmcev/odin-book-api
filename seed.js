@@ -27,7 +27,7 @@ async function connectMongo() {
 }
 connectMongo().catch(err => console.error(err));
 
-const numberOfUsers = 10;
+const numberOfUsers = 30;
 async function createUser() {
     let users = [];
 
