@@ -155,7 +155,7 @@ exports.unlikePost_post = async (req, res, next) => {
     try {
         const postId = req.params.id;
 
-        await Post.findByIdAndUpdate(postId, { $inc: { likes: -1 } });
+        await Post.findByIdAndUpdate(postId, { $pull: { likes: req.user._id} });
 
         res.json({ unlike: true })
     } catch (e) {
