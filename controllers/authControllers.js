@@ -111,3 +111,34 @@ exports.auth_get = async (req, res) => {
 
     res.json({ user: populatedUser });
 }
+
+
+
+exports.updateProfile = async (req, res, next) => {
+
+    try {
+        const { username, name, profilePic, bio } = req.body;
+
+        if (!req.user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (username) user.username = username;
+        if (name) user.name = name;
+        if (profilePic) user.profilePic = profilePic;
+        if (bio) user.bio = bio;
+
+        await user.save();
+
+        res.status(200).json({ message: 'Profile updated successfully', user });
+    } catch (error) {
+        next(error)
+    }
+};
+
+
