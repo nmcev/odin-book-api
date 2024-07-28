@@ -18,5 +18,6 @@ router.get('/auth', isAuthenticated, authControllers.auth_get);
 // logout router
 router.post('/logout', authControllers.logout_post);
 
-
+// PITCH update user profile
+router.patch('/edit-profile', isAuthenticated, authControllers.updateProfile )
 module.exports = router;
