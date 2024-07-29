@@ -105,7 +105,6 @@ exports.userPosts_get = async (req, res, next) => {
 
         const paginatedPosts = posts.slice(documentsToSkip, documentsToSkip + limit);
 
-        console.log(paginatedPosts.length)
         res.status(200).json({ posts: paginatedPosts });
     }
     catch (e) {
