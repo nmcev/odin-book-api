@@ -101,7 +101,6 @@ exports.userPosts_get = async (req, res, next) => {
 
         posts.sort((a, b) => a.createdAt - b.createdAt);
 
-        shuffle(posts)
 
         const paginatedPosts = posts.slice(documentsToSkip, documentsToSkip + limit);
 
