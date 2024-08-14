@@ -99,7 +99,7 @@ exports.userPosts_get = async (req, res, next) => {
         ]
 
 
-        posts.sort((a, b) => a.createdAt - b.createdAt);
+        posts.sort((a, b) => b.createdAt - a.createdAt);
 
 
         const paginatedPosts = posts.slice(documentsToSkip, documentsToSkip + limit);

@@ -28,6 +28,7 @@ exports.getAUser_get = async (req, res, next) => {
             .select('-password');
         if (!user) return res.status(404).send('User not found');
 
+        user.posts.sort((a, b) => b.createdAt - a.createdAt)
         res.json(user);
 
     } catch (error) {

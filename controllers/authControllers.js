@@ -108,6 +108,7 @@ exports.auth_get = async (req, res) => {
         .select('-password')
     .exec();
 
+    populatedUser.posts.sort((a, b) => b.createdAt - a.createdAt)
 
     res.json({ user: populatedUser });
 }
