@@ -30,12 +30,13 @@ exports.createPost_post = [
                 content,
                 media
             });
+            newPost.populate('author')
 
             await newPost.save();
 
             await User.findByIdAndUpdate(user.id, { $push: { posts: newPost._id } });
 
-            res.status(201).json({ post: newPost });
+            res.status(201).json(newPost);
 
         } catch (e) {
             next(e)
