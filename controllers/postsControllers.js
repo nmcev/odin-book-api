@@ -234,6 +234,36 @@ exports.getPost_get = async (req, res, next) => {
 
 }
 
+
+exports.repost_patch = async (req, res, next) => {
+
+    const { postId } = req.body
+    const userId = req.user._id
+
+    try {
+
+        await User.findByIdAndUpdate(userId, { $addToSet: { repostedPosts: postId } }); // addToSet: for preventing duplicate post ids
+
+        const post = await Post.findById(postId)
+            .populate('author', 'username profilePic ')
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author',
+                    select: 'username profilePic'
+                }
+            });
+
+
+        res.json(post)
+
+    } catch (error) {
+        next(error)
+    }
+
+
+}
+
 function shuffle(array) {
     let currentIndex = array.length;
 
