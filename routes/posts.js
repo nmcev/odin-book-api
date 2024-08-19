@@ -8,7 +8,8 @@ const {
     likePost_post,
     unlikePost_post,
     updatePost_patch,
-    getPost_get
+    getPost_get,
+    repost_patch
 } = require('../controllers/postsControllers');
 
 const { isAuthenticated } = require('../auth/isAuth')
@@ -39,6 +40,8 @@ router.post('/posts/unlike/:id', isAuthenticated, unlikePost_post);
 
 // UPDATE(patch) a post
 router.patch('/posts/:id', isAuthenticated, updatePost_patch)
+
+router.patch('/reposts', isAuthenticated, repost_patch )
 
 module.exports = router;
 
