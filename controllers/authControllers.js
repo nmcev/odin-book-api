@@ -109,6 +109,7 @@ exports.auth_get = async (req, res) => {
     .exec();
 
     populatedUser.posts.sort((a, b) => b.createdAt - a.createdAt)
+    populatedUser.repostedPosts.sort((a, b) => b.createdAt - a.createdAt)
 
     res.json({ user: populatedUser });
 }
