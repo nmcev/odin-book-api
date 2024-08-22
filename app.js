@@ -13,6 +13,7 @@ const postsRouter = require('./routes/posts');
 const commentsRouter = require('./routes/comments');
 const usersRouter = require('./routes/users');
 const followRouter = require('./routes/follow')
+const notificationsRouter = require('./routes/notifications')
 var app = express();
 const MongoStore = require('connect-mongo'); 
 
@@ -67,6 +68,7 @@ app.use('/api', postsRouter);
 app.use('/api', commentsRouter);
 app.use('/api', usersRouter);
 app.use('/api', followRouter)
+app.use('/api', notificationsRouter)
 //connect to mongodb
 connectToMongoDB().catch(err => console.error(err));
 
