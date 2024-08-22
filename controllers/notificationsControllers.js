@@ -5,7 +5,8 @@ exports.getNotifications = async (req, res, next) => {
         const notifications = await Notification.find({ recipient: req.user._id })
             .sort({ createdAt: -1 })
             .populate('user', 'username profilePic')
-            .populate('post', 'content');
+            .populate('post', 'content media')
+            .populate('recipient')
 
         res.json(notifications);
     } catch (e) {
