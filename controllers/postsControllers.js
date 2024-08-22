@@ -147,9 +147,9 @@ exports.likePost_post = async (req, res, next) => {
 
         await Post.findByIdAndUpdate(postId, { $push: { likes: req.user._id } });
 
-        const postOwner = await User.findById(post.author);
+        const postOwner = post.author
 
-        if (postOwner) {
+        if (postOwner && req.user._id.toString() !== postOwner._id.toString()) {
             const notification = new Notification({
                 type: 'like',
                 user: req.user._id, // the user who liked the post
