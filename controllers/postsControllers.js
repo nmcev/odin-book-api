@@ -274,7 +274,8 @@ exports.repost_patch = async (req, res, next) => {
             const notification = new Notification({
                 type: 'repost',
                 user: userId,
-                recipient: postOwner._id
+                recipient: postOwner._id,
+                post
             })
 
             await notification.save()
