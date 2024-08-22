@@ -153,7 +153,8 @@ exports.likePost_post = async (req, res, next) => {
             const notification = new Notification({
                 type: 'like',
                 user: req.user._id, // the user who liked the post
-                recipient: postOwner._id // the owner of the post
+                recipient: postOwner._id,// the owner of the post
+                post
             })
 
             await notification.save();
