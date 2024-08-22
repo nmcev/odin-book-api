@@ -1,3 +1,4 @@
+const Notification = require('../models/Notification');
 const User = require('../models/User')
 
 exports.followUser_post = async (req, res, next) => {
@@ -14,6 +15,13 @@ exports.followUser_post = async (req, res, next) => {
 
         await User.findByIdAndUpdate(currentUserId, { $addToSet: { following: userId } },);
 
+        const notification = new Notification({
+            type: 'follow',
+            user: currentUserId, // The user who clicked the "Follow" 
+            recipient: userId // The user who is being followed 
+        })
+
+        await notification.save();
         res.status(200).json({ message: 'Followed user successfully' });
 
 
