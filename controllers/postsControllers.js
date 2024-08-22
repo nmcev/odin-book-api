@@ -258,7 +258,7 @@ exports.repost_patch = async (req, res, next) => {
         await User.findByIdAndUpdate(userId, { $addToSet: { repostedPosts: postId } }); // addToSet: for preventing duplicate post ids
 
         const post = await Post.findById(postId)
-            .populate('author', 'username profilePic ')
+            .populate('author', 'username profilePic content ')
             .populate({
                 path: 'comments',
                 populate: {
@@ -266,6 +266,21 @@ exports.repost_patch = async (req, res, next) => {
                     select: 'username profilePic'
                 }
             });
+        const postOwner = post.author
+
+        if (postOwner && postOwner._id.toString() !== userId.toString()) {
+
+            const notification = new Notification({
+                type: 'repost',
+                user: userId,
+                recipient: postOwner._id
+            })
+
+            await notification.save()
+
+        }
+
+
 
 
         res.json(post)
