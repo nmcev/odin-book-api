@@ -1,3 +1,4 @@
+const Notification = require('../models/Notification');
 const Post = require('../models/Post');
 const User = require('../models/User');
 
@@ -134,7 +135,7 @@ exports.likePost_post = async (req, res, next) => {
 
     try {
         const postId = req.params.id;
-        const post = await Post.findById(postId);
+        const post = await Post.findById(postId).populate('author');
 
         if (!post) {
             return res.status(404).json({ error: 'Post not found' });
@@ -145,6 +146,18 @@ exports.likePost_post = async (req, res, next) => {
         }
 
         await Post.findByIdAndUpdate(postId, { $push: { likes: req.user._id } });
+
+        const postOwner = await User.findById(post.author);
+
+        if (postOwner) {
+            const notification = new Notification({
+                type: 'like',
+                user: req.user._id, // the user who liked the post
+                recipient: postOwner._id // the owner of the post
+            })
+
+            await notification.save();
+        }
 
         res.json({ like: true });
     } catch (e) {
@@ -163,8 +176,8 @@ exports.unlikePost_post = async (req, res, next) => {
             return res.status(404).json({ error: 'Post not found' });
         }
 
-        
-        await Post.findByIdAndUpdate(postId, { $pull: { likes: req.user._id} });
+
+        await Post.findByIdAndUpdate(postId, { $pull: { likes: req.user._id } });
 
         res.json({ unlike: true })
     } catch (e) {
