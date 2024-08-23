@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const DemoUser = require('../models/DemoUser');
 
 exports.getAllUsers_get = async (req, res, next) => {
     try {
@@ -53,3 +54,14 @@ exports.search_get = async (req, res, next) => {
         next(e);
     }
 }
+
+exports.getAllDemoUsers_get = async (req, res, next) => {
+    try {
+        const users = await DemoUser.find().select('-password');
+
+        res.json(users);
+    } catch (error) {
+        next(error)
+    }
+
+};
