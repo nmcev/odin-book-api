@@ -9,7 +9,8 @@ const {
     unlikePost_post,
     updatePost_patch,
     getPost_get,
-    repost_patch
+    repost_patch,
+    unrepost_patch
 } = require('../controllers/postsControllers');
 
 const { isAuthenticated } = require('../auth/isAuth')
@@ -43,5 +44,6 @@ router.patch('/posts/:id', isAuthenticated, updatePost_patch)
 
 router.patch('/reposts', isAuthenticated, repost_patch )
 
+router.patch('/unrepost/:postId', isAuthenticated, unrepost_patch )
 module.exports = router;
 

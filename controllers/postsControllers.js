@@ -294,6 +294,22 @@ exports.repost_patch = async (req, res, next) => {
 
 }
 
+
+exports.unrepost_patch = async (req, res, next) => {
+    const { postId } = req.params
+    const userId = req.user._id;
+
+    try {
+        await User.findByIdAndUpdate(userId, {
+            $pull: { repostedPosts: postId }
+        });
+
+        res.status(200).json({postId});
+    } catch (error) {
+        res.status(500).send({ message: 'Error unreposting the post', error });
+    }
+
+}
 function shuffle(array) {
     let currentIndex = array.length;
 
