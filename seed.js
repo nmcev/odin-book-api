@@ -1,17 +1,18 @@
 const mongoose = require('mongoose');
 const User = require('./models/User');
+const DemoUser = require('./models/DemoUser');
 const Post = require('./models/Post');
 const Comment = require('./models/Comment');
 const { faker } = require('@faker-js/faker');
 require('dotenv').config();
 
-const categories = [ 'city', 'people', 'sports', 'food', 'nightlife', 'business', 'transport'];
+const categories = ['city', 'people', 'sports', 'food', 'nightlife', 'business', 'transport'];
 
 const getRandomCategory = () => {
     const randomIndex = Math.floor(Math.random() * categories.length);
     return categories[randomIndex];
-  };
-  
+};
+
 
 async function connectMongo() {
     try {
@@ -33,20 +34,45 @@ async function createUser() {
 
     for (let i = 0; i < numberOfUsers; i++) {
 
-        let user = new User({
+        const userInfo = {
             username: faker.internet.userName(),
             name: faker.person.fullName(),
             password: '123456',
-            profilePic: faker.image.avatarLegacy(),
+            profilePic: faker.image.urlPicsumPhotos(),
             bio: faker.person.bio(),
+
+        }
+        let user = new User({
+
+            username: userInfo.username,
+            name: userInfo.name,
+            password: userInfo.password,
+            profilePic: userInfo.profilePic,
+            bio: userInfo.bio,
             followers: [],
             following: [],
             repostedPosts: [],
             posts: [],
         });
 
+        let demo = new DemoUser({
+            
+            username: userInfo.username,
+            name: userInfo.name,
+            password: userInfo.password,
+            profilePic: userInfo.profilePic,
+            bio: userInfo.bio,
+            followers: [],
+            following: [],
+            repostedPosts: [],
+            posts: [],
+
+        });
+
+
         console.log(`Creating user ${i}...`);
         await user.save();
+        await demo.save()
         users.push(user);
     }
 
@@ -62,12 +88,12 @@ async function createPosts(users) {
         let numOfPosts = faker.number.int({ min: 1, max: 5 });
 
         for (let j = 0; j < numOfPosts; j++) {
-            const numOfLikes = faker.number.int({ min: 1, max: users.length})
+            const numOfLikes = faker.number.int({ min: 1, max: users.length })
             const likes = [];
 
 
             for (let k = 0; k < numOfLikes; k++) {
-                let randomUserIndex = faker.number.int({ min: 0, max: users.length - 1 }); 
+                let randomUserIndex = faker.number.int({ min: 0, max: users.length - 1 });
 
                 const likedBy = users[randomUserIndex]._id
                 if (!likes.includes(likedBy)) {
