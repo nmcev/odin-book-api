@@ -69,15 +69,13 @@ exports.allPosts_get = async (req, res, next) => {
 };
 
 exports.userPosts_get = async (req, res, next) => {
-
-    // userPosts_get: retrieve users' posts and posts of those who are following.
-
+    
     try {
         const userId = req.user._id;
 
         const page = parseInt(req.query.page || 1);
         const limit = parseInt(req.query.limit || 10);
-        const documentsToSkip = (page - 1) * limit
+        const documentsToSkip = (page - 1) * limit;
 
         const user = await User.findById(userId)
             .populate({
@@ -91,27 +89,44 @@ exports.userPosts_get = async (req, res, next) => {
                     populate: { path: 'author', select: 'username profilePic' }
                 }
             });
+
         if (!user) {
-            return res.status(404).json({ message: "User not found" })
-        };
+            return res.status(404).json({ message: "User not found" });
+        }
 
-        const posts = [
+        let posts = [
             ...user.posts,
-            ...user.following.flatMap((user) => user.posts)
-        ]
+            ...user.following.flatMap(followedUser => followedUser.posts)
+        ];
 
+        const allPosts = await Post.find()
+            .populate('author', 'username profilePic content')
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author',
+                    select: 'username profilePic'
+                }
+            });
 
+        
         posts.sort((a, b) => b.createdAt - a.createdAt);
 
+        posts = [...posts, ...allPosts];
 
-        const paginatedPosts = posts.slice(documentsToSkip, documentsToSkip + limit);
+        const uniquePosts = Array.from(new Map(posts.map(post => [post._id.toString(), post])).values());
+
+        uniquePosts.sort((a, b) => b.createdAt - a.createdAt);
+
+        
+        const paginatedPosts = uniquePosts.slice(documentsToSkip, documentsToSkip + limit);
+
 
         res.status(200).json({ posts: paginatedPosts });
     }
     catch (e) {
         next(e);
     }
-
 };
 
 
