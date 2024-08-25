@@ -199,8 +199,15 @@ exports.updatePost_patch = [
         const postId = req.params.id;
 
         try {
-            const post = await Post.findById(postId);
-
+            const post = await Post.findById(postId)
+            .populate('author', 'username profilePic content ')
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author',
+                    select: 'username profilePic'
+                }
+            });
             if (!post) {
                 return res.status(404).json({ message: 'Post not found' });
             }
@@ -213,7 +220,7 @@ exports.updatePost_patch = [
             }
 
             await post.save();
-            res.status(200).json({ message: 'Post updated successfully', post });
+            res.status(200).json(post);
 
         } catch (e) {
             next(e);
@@ -304,7 +311,7 @@ exports.unrepost_patch = async (req, res, next) => {
             $pull: { repostedPosts: postId }
         });
 
-        res.status(200).json({postId});
+        res.status(200).json({ postId });
     } catch (error) {
         res.status(500).send({ message: 'Error unreposting the post', error });
     }
