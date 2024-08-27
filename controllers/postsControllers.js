@@ -183,6 +183,14 @@ exports.likePost_post = async (req, res, next) => {
             await notification.save();
         }
 
+        sendEventsToAll({
+            type: 'like',
+            postId: postId,
+            userId: req.user._id,
+            message: `${req.user.username} liked a post`,
+            time: new Date().toLocaleTimeString(),
+        });
+
         res.json({ like: true });
     } catch (e) {
         next(e)
@@ -203,6 +211,14 @@ exports.unlikePost_post = async (req, res, next) => {
 
         await Post.findByIdAndUpdate(postId, { $pull: { likes: req.user._id } });
 
+        sendEventsToAll({
+            type: 'unlike',
+            postId: postId,
+            userId: req.user._id,
+            message: `${req.user.username} liked a post`,
+            time: new Date().toLocaleTimeString(),
+        });
+        
         res.json({ unlike: true })
     } catch (e) {
         next(e)
