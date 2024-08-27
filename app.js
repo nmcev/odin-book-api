@@ -14,6 +14,7 @@ const commentsRouter = require('./routes/comments');
 const usersRouter = require('./routes/users');
 const followRouter = require('./routes/follow')
 const notificationsRouter = require('./routes/notifications')
+const {router: eventRouter} = require('./routes/events')
 var app = express();
 const MongoStore = require('connect-mongo'); 
 
@@ -63,6 +64,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/events', eventRouter)
 app.use('/api', authRouter);
 app.use('/api', postsRouter);
 app.use('/api', commentsRouter);
