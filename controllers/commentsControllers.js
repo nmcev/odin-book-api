@@ -23,7 +23,7 @@ exports.createComment_post = async (req, res, next) => {
             content,
             post: postId,
             author: user,
-            createdAt: new Date().toLocaleTimeString()
+            createdAt: new Date()
         }
         
         sendEventsToAll({
