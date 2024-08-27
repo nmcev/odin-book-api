@@ -1,5 +1,7 @@
 const Comment = require('../models/Comment');
 const Post = require('../models/Post');
+const User = require('../models/User');
+const { sendEventsToAll } = require('../routes/events')
 
 exports.createComment_post = async (req, res, next) => {
     const { content, postId, userId } = req.body;
@@ -12,9 +14,24 @@ exports.createComment_post = async (req, res, next) => {
         })
 
         await newComment.save();
+        const user = await User.findById(userId);
 
 
         await Post.findByIdAndUpdate(postId, { $push: { comments: newComment } });
+
+        const comment = {
+            content,
+            post: postId,
+            author: user,
+            createdAt: new Date().toLocaleTimeString()
+        }
+        
+        sendEventsToAll({
+            type: 'comment',
+            comment,
+            postId: postId,
+            time: new Date().toLocaleTimeString()            
+        })
         res.status(201).json({ commented: true, comment: newComment })
     } catch (err) {
         next(err)
