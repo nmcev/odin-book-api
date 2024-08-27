@@ -33,4 +33,14 @@ function sendEventsToAll(newData) {
     );
 }
 
-module.exports = { router, sendEventsToAll }
+function sendEventToUser(newData, recipientId) {
+    const client = clients.find(client => client.id === recipientId);
+
+    if (client && client.res) {
+        client.res.write(`data: ${JSON.stringify(newData)}\n\n`);
+    } else {
+        console.error('Client not found or response not available');
+    }
+}
+
+module.exports = { router, sendEventsToAll, sendEventToUser }
