@@ -2,6 +2,8 @@ const Notification = require('../models/Notification');
 const Post = require('../models/Post');
 const User = require('../models/User');
 
+const { sendEventsToAll } = require('../routes/events')
+
 const { body, validationResult } = require('express-validator');
 
 exports.createPost_post = [
@@ -37,6 +39,12 @@ exports.createPost_post = [
 
             await User.findByIdAndUpdate(user.id, { $push: { posts: newPost._id } });
 
+            sendEventsToAll({
+                type: 'new_post',
+                post: newPost,
+                message: `${user.username} created a new post`,
+                time: new Date().toLocaleTimeString()
+            })
             res.status(201).json(newPost);
 
         } catch (e) {
@@ -69,7 +77,7 @@ exports.allPosts_get = async (req, res, next) => {
 };
 
 exports.userPosts_get = async (req, res, next) => {
-    
+
     try {
         const userId = req.user._id;
 
@@ -109,7 +117,7 @@ exports.userPosts_get = async (req, res, next) => {
                 }
             });
 
-        
+
         posts.sort((a, b) => b.createdAt - a.createdAt);
 
         posts = [...posts, ...allPosts];
@@ -118,7 +126,7 @@ exports.userPosts_get = async (req, res, next) => {
 
         uniquePosts.sort((a, b) => b.createdAt - a.createdAt);
 
-        
+
         const paginatedPosts = uniquePosts.slice(documentsToSkip, documentsToSkip + limit);
 
 
@@ -215,14 +223,14 @@ exports.updatePost_patch = [
 
         try {
             const post = await Post.findById(postId)
-            .populate('author', 'username profilePic content ')
-            .populate({
-                path: 'comments',
-                populate: {
-                    path: 'author',
-                    select: 'username profilePic'
-                }
-            });
+                .populate('author', 'username profilePic content ')
+                .populate({
+                    path: 'comments',
+                    populate: {
+                        path: 'author',
+                        select: 'username profilePic'
+                    }
+                });
             if (!post) {
                 return res.status(404).json({ message: 'Post not found' });
             }
