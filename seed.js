@@ -29,7 +29,7 @@ async function connectMongo() {
 }
 connectMongo().catch(err => console.error(err));
 
-const numberOfUsers = 30;
+const numberOfUsers = 5;
 async function createUser() {
     let users = [];
 
@@ -57,7 +57,7 @@ async function createUser() {
         });
 
         let demo = new DemoUser({
-            
+
             username: userInfo.username,
             name: userInfo.name,
             password: userInfo.password,
@@ -112,7 +112,7 @@ async function createPosts(users) {
                     const newNotification = new Notification({
                         type: 'like',
                         user: likedBy,
-                        recipient: users[i],
+                        recipient: users[i]._id,
                         post: post
                     })
                     await newNotification.save();
@@ -122,8 +122,9 @@ async function createPosts(users) {
 
             }
 
+            post.likes = likes;
 
-            console.log(`Creating post ${j}...`);
+            console.log(`Creating post number ${j} for user ${i}}`);
             await post.save();
             posts.push(post);
 
@@ -171,30 +172,44 @@ async function createFollowers(users) {
 
         let numOfFollowers = faker.number.int({ min: 2, max: 5 });
 
-        let followers = users.filter(u => u._id !== user._id);
+        // Log the current user and the number of followers
+        console.log(`Creating followers for user ${user.username}. Number of followers: ${numOfFollowers}`);
+
+        let followers = users.filter(u => u._id.toString() !== user._id.toString());
+
+        // Log the filtered followers
+        console.log(`Filtered followers for user ${user.username}: ${followers.map(f => f.username)}`);
 
         followers = followers.sort(() => Math.random() - 0.5);
 
         for (let j = 0; j < numOfFollowers; j++) {
             const follower = followers[j];
 
-            if (!user.followers.includes(follower._id)) {
-                user.followers.push(follower._id);
-                follower.following.push(user._id);
+            if (follower) {
+                // Log the current follower
+                console.log(`Processing follower ${follower.username}`);
 
-                const newNotification = new Notification({
-                    type: 'follow',
-                    user: follower._id,
-                    recipient: user._id
-                });
+                if (!user.followers.includes(follower._id)) {
+                    user.followers.push(follower._id);
+                    follower.following.push(user._id);
 
-                await newNotification.save();
-                await follower.save();
+                    const newNotification = new Notification({
+                        type: 'follow',
+                        user: follower._id,
+                        recipient: user._id
+                    });
+
+                    await newNotification.save();
+                    await follower.save();
+                }
+            } else {
+                console.error(`Follower at index ${j} is undefined`);
             }
         }
         await user.save();
     }
 }
+
 
 
 
