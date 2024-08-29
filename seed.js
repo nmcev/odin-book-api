@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const User = require('./models/User');
 const DemoUser = require('./models/DemoUser');
 const Post = require('./models/Post');
+const Notification = require('./models/Notification')
 const Comment = require('./models/Comment');
 const { faker } = require('@faker-js/faker');
 require('dotenv').config();
@@ -92,17 +93,6 @@ async function createPosts(users) {
             const likes = [];
 
 
-            for (let k = 0; k < numOfLikes; k++) {
-                let randomUserIndex = faker.number.int({ min: 0, max: users.length - 1 });
-
-                const likedBy = users[randomUserIndex]._id
-                if (!likes.includes(likedBy)) {
-                    likes.push(users[randomUserIndex]._id)
-                } else {
-                    k--;
-                }
-
-            }
             let post = new Post({
                 author: users[i]._id,
                 content: faker.lorem.lines(),
@@ -112,6 +102,26 @@ async function createPosts(users) {
                 comments: [],
 
             });
+
+            for (let k = 0; k < numOfLikes; k++) {
+                let randomUserIndex = faker.number.int({ min: 0, max: users.length - 1 });
+
+                const likedBy = users[randomUserIndex]._id
+                if (!likes.includes(likedBy)) {
+                    likes.push(users[randomUserIndex]._id)
+                    const newNotification = new Notification({
+                        type: 'like',
+                        user: likedBy,
+                        recipient: users[i],
+                        post: post
+                    })
+                    await newNotification.save();
+                } else {
+                    k--;
+                }
+
+            }
+
 
             console.log(`Creating post ${j}...`);
             await post.save();
@@ -159,36 +169,35 @@ async function createFollowers(users) {
     for (let i = 0; i < users.length; i++) {
         let user = users[i];
 
-        let numOfFollowers = faker.number.int({ min: 2, max: 5 })
-
+        let numOfFollowers = faker.number.int({ min: 2, max: 5 });
 
         let followers = users.filter(u => u._id !== user._id);
+
+        followers = followers.sort(() => Math.random() - 0.5);
 
         for (let j = 0; j < numOfFollowers; j++) {
             const follower = followers[j];
 
-            user.followers.push(follower._id);
+            if (!user.followers.includes(follower._id)) {
+                user.followers.push(follower._id);
+                follower.following.push(user._id);
+
+                const newNotification = new Notification({
+                    type: 'follow',
+                    user: follower._id,
+                    recipient: user._id
+                });
+
+                await newNotification.save();
+                await follower.save();
+            }
         }
         await user.save();
     }
 }
 
-async function createFollowing(users) {
-    for (let i = 0; i < users.length; i++) {
-        let user = users[i];
 
-        let followings = users.filter(u => u._id !== user._id);
-        let numOfFollowing = faker.number.int({ min: 2, max: 5 })
 
-        for (let j = 0; j < numOfFollowing; j++) {
-            const following = followings[j];
-
-            user.following.push(following._id);
-        }
-
-        await user.save();
-    }
-}
 
 async function createRepostedPosts(users, posts) {
     for (let i = 0; i < users.length; i++) {
@@ -201,8 +210,18 @@ async function createRepostedPosts(users, posts) {
 
             const repostedPost = repostedPosts[j];
 
-            user.repostedPosts.push(repostedPost._id);
+            if (!user.repostedPosts.includes(repostedPost._id)) {
+                user.repostedPosts.push(repostedPost._id);
 
+                const newNotification = new Notification({
+                    type: 'repost',
+                    user: user._id,
+                    recipient: repostedPost.author,
+                    post: repostedPost._id
+                })
+
+                await newNotification.save();
+            }
         }
         await user.save();
     }
@@ -214,7 +233,6 @@ async function seedDB() {
         let users = await createUser();
 
         await createFollowers(users);
-        await createFollowing(users);
 
         let posts = await createPosts(users);
         await createRepostedPosts(users, posts);
