@@ -43,12 +43,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(session({
   secret: process.env.SESSION_SECRET,
-  saveUninitialized: true,
+  saveUninitialized: false,
   resave: false,
   store: sessionStore,
   cookie: {
       maxAge: 24 * 60 * 60 * 1000, 
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
   },
 }));

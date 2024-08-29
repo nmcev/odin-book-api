@@ -1,10 +1,10 @@
-# fly.toml app configuration file generated for odin-book-api-damp on 2024-08-29T13:56:58+03:00
+# fly.toml app configuration file generated for odin-book-api-empty-waterfall-5146 on 2024-08-30T00:45:14+03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'odin-book-api-damp'
-primary_region = 'ams'
+app = 'odin-book-api-empty-waterfall-5146'
+primary_region = 'otp'
 
 [build]
 
