@@ -42,6 +42,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(session({
+  store: sessionStore,
   secret: 'cats',
   resave: false,
   saveUninitialized: false,
