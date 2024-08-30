@@ -26,7 +26,7 @@ const sessionStore = MongoStore.create({
 const cors = require('cors')
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: ['http://localhost:5173', 'https://odin-threads.netlify.app'],
   credentials: true,
 
 }))
@@ -42,17 +42,14 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(session({
-  secret: process.env.SESSION_SECRET,
-  saveUninitialized: false,
+  secret: 'cats',
   resave: false,
-  store: sessionStore,
+  saveUninitialized: false,
   cookie: {
-      maxAge: 24 * 60 * 60 * 1000, 
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax'
-  },
-}));
+    sameSite: 'none',
+    secure: true
+  }
+  }));
 
 app.use((req, res, n) => {
   console.log(`secure: ${process.env.NODE_ENV === 'production'}`);
