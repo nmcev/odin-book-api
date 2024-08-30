@@ -52,12 +52,7 @@ app.use(session({
   }
   }));
 
-app.use((req, res, n) => {
-  console.log(`secure: ${process.env.NODE_ENV === 'production'}`);
-  console.log(`Session ID: ${req.sessionID}`);
-  console.log('Session Details:', req.session);
-  n();
-})
+
 
 app.use(passport.initialize());
 app.use(passport.session());
