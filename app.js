@@ -54,6 +54,10 @@ app.use(session({
   },
 }));
 
+app.use((req, res, n) => {
+  console.log(`secure: ${process.env.NODE_ENV === 'production'}`);
+  n();
+})
 
 app.use(passport.initialize());
 app.use(passport.session());
