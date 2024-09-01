@@ -26,7 +26,7 @@ const sessionStore = MongoStore.create({
 const cors = require('cors')
 
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://odin-threads.netlify.app'],
+  origin: ['http://localhost:5173', 'https://odin-book.muha.tech'],
   credentials: true,
 
 }))
