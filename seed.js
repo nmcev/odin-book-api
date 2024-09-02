@@ -113,7 +113,7 @@ async function createPosts(users) {
                         type: 'like',
                         user: likedBy,
                         recipient: users[i]._id,
-                        post: post
+                        post: post._id
                     })
                     await newNotification.save();
                 } else {
